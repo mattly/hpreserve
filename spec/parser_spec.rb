@@ -27,6 +27,15 @@ describe Hpreserve::Parser do
       @doc.render_content
       @doc.doc.to_plain_text.should == "Hi Jack Shepherd"
     end
+    
+  end
+  
+  describe "wrapper replacement" do
+    it "replaces wrapper elements with their contents" do
+      @doc = Hpreserve::Parser.new("a <wrapper>b</wrapper> c")
+      @doc.replace_wrappers
+      @doc.doc.to_s.should == "a b c"
+    end
   end
     
 end

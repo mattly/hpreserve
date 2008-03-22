@@ -30,4 +30,8 @@ class Hpreserve::Parser
     end
   end
   
+  def replace_wrappers
+    (@doc/"wrapper").each {|e| e.after(e.inner_html) }.remove
+  end
+  
 end
