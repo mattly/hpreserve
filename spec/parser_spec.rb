@@ -41,9 +41,9 @@ describe Hpreserve::Parser do
   describe "filter handler" do
 
     it "runs the given filterset on a node" do
-      @doc = Hpreserve::Parser.new("<span filter='upcase'>foo</span>")
+      @doc = Hpreserve::Parser.new("<span filter='capitalize'>foo</span>")
       @doc.run_filters
-      @doc.doc.at('span').inner_html.should == 'FOO'
+      @doc.doc.at('span').inner_html.should == 'Foo'
     end
     
   end
