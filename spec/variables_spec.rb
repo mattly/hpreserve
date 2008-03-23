@@ -32,6 +32,8 @@ describe Hpreserve::Variables do
       @var.storage['x'] = proc { {'a' => 'value'} }
       @var[%w(x a)].should == 'value'
     end
+    
+    it "descends into datetime variables"
   end
   
 end

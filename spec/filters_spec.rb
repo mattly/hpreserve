@@ -1,0 +1,33 @@
+require File.dirname(__FILE__) + '/spec_helper.rb'
+
+describe Hpreserve::Filters do
+  
+  describe "sandbox" do
+    before { @f = Hpreserve::Filters.create }
+    # note: #should and #should_not are undefined at class creation
+    
+    it "extends with @@filter_modules" do
+      @f.respond_to?('upcase').should be_true
+    end
+    
+    it "does not respond to or send non-allowed methods" do
+      lambda { @f.__send__('instance_eval')}.should raise_error(NoMethodError)
+    end
+  end
+  
+  describe "filterstring parser" do
+    it "handles single filters without arguments" do
+      Hpreserve::Filters.parse('upcase').should == [['upcase']]
+    end
+    
+    it "handles multiple filters without arguments" do
+      Hpreserve::Filters.parse('upcase; downcase').should == [['upcase'], ['downcase']]
+    end
+    
+    it "handles single filters with arguments" do
+      Hpreserve::Filters.parse('formatdate: short').should == [['formatdate', 'short']]
+    end
+
+  end
+   
+end

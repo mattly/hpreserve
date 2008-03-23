@@ -5,4 +5,11 @@ rescue LoadError
   gem 'rspec'
   require 'spec'
 end
+
+require 'rubygems'
+gem 'ruby-debug'
+require 'ruby-debug'
+
 require "#{File.dirname(__FILE__)}/../config/requirements"
+
+Debugger.start

@@ -1,37 +1,53 @@
-class Hpreserve::Parser
+module Hpreserve
+  class Parser
   
-  attr_accessor :doc, :variables
-  
-  def initialize(doc='')
-    self.doc = Hpricot(doc)
-  end
-  
-  def self.render(doc='', variables={})
-    doc = new(doc)
-    doc.render(variables)
-  end
-  
-  # fun Hpricot tricks: http://code.whytheluckystiff.net/hpricot/wiki/HpricotCssSearch
-  
-  def variables=(vars)
-    @variables = Hpreserve::Variables.new(vars)
-  end
-  
-  def render(variables={})
-    self.variables = variables
-    render_content
-    @doc.to_s
-  end
-  
-  def render_content
-    (@doc/"[@content]").each do |node|
-      node.inner_html = variables[node['content'].split('.')]
-      node.remove_attribute('content')
+    def self.render(doc='', variables={})
+      doc = new(doc)
+      doc.render(variables)
     end
-  end
   
-  def replace_wrappers
-    (@doc/"wrapper").each {|e| e.after(e.inner_html) }.remove
-  end
+    attr_accessor :doc, :variables, :filter_sandbox
   
+    def initialize(doc='')
+      self.doc = Hpricot(doc)
+      self.filter_sandbox = Hpreserve::Filters.create
+    end
+  
+    def variables=(vars)
+      @variables = Hpreserve::Variables.new(vars)
+    end
+  
+    def render(variables={})
+      self.variables = variables
+      render_content
+      run_filters
+      replace_wrappers
+      @doc.to_s
+    end
+  
+    def render_content
+      (@doc/"[@content]").each do |node|
+        node.inner_html = variables[node['content'].split('.')]
+        node.remove_attribute('content')
+      end
+    end
+  
+    def run_filters
+      (@doc/"[@filter]").each do |node|
+        filters = Hpreserve::Filters.parse(node['filter'])
+        filters.each do |filterset|
+          filter = filterset.shift
+          next unless filter_sandbox.respond_to?(filter)
+          args = [node, filterset].flatten
+          filter_sandbox.__send__(filter, *args)
+        end
+        node.remove_attribute('filter')
+      end
+    end
+  
+    def replace_wrappers
+      (@doc/"wrapper").each {|e| e.swap(e.inner_html) }
+    end
+  
+  end
 end

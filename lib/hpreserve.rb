@@ -6,3 +6,5 @@ end
 
 require 'hpreserve/parser'
 require 'hpreserve/variables'
+require 'hpreserve/filters'
+require 'hpreserve/standard_filters'
