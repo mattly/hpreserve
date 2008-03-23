@@ -1,6 +1,6 @@
 module Hpreserve
   
-  # 
+  # todo: rewrite this
   
   # Acts as a sandbox to run filters in, most everything except the self.parse method
   # was stolen from Liquid's Strainer class. Almost all the standard class methods
@@ -23,12 +23,21 @@ module Hpreserve
       filterset
     end
     
+    # The filter parser expects a string formatted similar to an html element's "style"
+    # attribute:
+    # 
+    #   * <tt>filter="format_date: short 24hr; truncate_words: 15 ..."</tt>
+    #
+    # (to provide an example of two currently non-existant filters you wouldn't use
+    # together...) (todo: better examples fool!). Filters are separated by semicolons
+    # and are executed in order given. If the filter needs arguments, those are given
+    # after a colon, arguments separated by spaces.
     def self.parse(str='')
       str.split(';').inject([]) do |memo, rule|
         list = rule.split(':')
         filter = list.shift.strip
         set = [filter]
-        set << list.join(':').strip unless list.empty?
+        set += list.join(':').split(' ').collect{|a| a.strip } unless list.empty?
         memo << set
       end
     end

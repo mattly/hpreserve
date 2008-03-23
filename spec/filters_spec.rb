@@ -7,7 +7,7 @@ describe Hpreserve::Filters do
     # note: #should and #should_not are undefined at class creation
     
     it "extends with @@filter_modules" do
-      @f.respond_to?('upcase').should be_true
+      @f.respond_to?('capitalize').should be_true
     end
     
     it "does not respond to or send non-allowed methods" do
@@ -25,7 +25,16 @@ describe Hpreserve::Filters do
     end
     
     it "handles single filters with arguments" do
-      Hpreserve::Filters.parse('formatdate: short').should == [['formatdate', 'short']]
+      Hpreserve::Filters.parse('truncate: 30 ...').should == [['truncate', '30', '...']]
+    end
+    
+    it "handles complex filter directives" do
+      Hpreserve::Filters.parse(
+        'truncate: 30 ...; capitalize; link_to: @item.link; add_class: @item.type'
+      ).should == [
+        ['truncate', '30', '...'], ['capitalize'], ['link_to', '@item.link'], 
+        ['add_class', '@item.type']
+      ]
     end
 
   end
