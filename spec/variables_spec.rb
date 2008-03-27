@@ -70,17 +70,4 @@ describe Hpreserve::Variables do
     end
   end
   
-  describe "string output" do
-    before do
-      @var = Hpreserve::Variables.new({'a' => {'b' => {'c' => 'value'}}})
-    end
-    
-    it "appends .default if the given path results in a Hash" do
-      @var.storage['a']['default'] = 'default'
-      @var.string_for('a').should == 'default'
-    end
-    
-    
-  end
-  
 end

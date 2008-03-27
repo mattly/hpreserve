@@ -34,7 +34,9 @@ module Hpreserve
     
     def render_content
       (@doc/"[@content]").each do |node|
-        node.inner_html = variables.string_for node['content'].split('.')
+        value = variables[node['content'].split('.')]
+        value = value['default'].if value.respond_to?(:has_key?)
+        node.inner_html = value
         node.remove_attribute('content')
       end
     end
@@ -51,6 +53,6 @@ module Hpreserve
         node.remove_attribute('filter')
       end
     end
-  
+    
   end
 end

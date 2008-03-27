@@ -28,15 +28,5 @@ module Hpreserve
       stack
     end
     
-    def string_for(*path)
-      value = self[path]
-      if value.respond_to?(:has_key?)
-        value = value['default']
-      elsif value.respond_to?(:httpdate)
-        value.httpdate
-      end
-      value.to_s
-    end
-    
   end
 end
