@@ -20,8 +20,7 @@ module Hpreserve
   
     def render(variables={})
       self.variables = variables
-      render_content
-      run_filters
+      render_nodes
       @doc.to_s
     end
     
@@ -32,27 +31,38 @@ module Hpreserve
       end
     end
     
-    def render_content
-      (@doc/"[@content]").each do |node|
-        value = variables[node['content'].split('.')]
-        value = value['default'] if value.respond_to?(:has_key?)
-        node.inner_html = value
-        node.remove_attribute('content')
-      end
+    def render_nodes(base=@doc)
+      (base/"[@content]").each {|node| render_node_content(node) }
+      (base/'[@filter]').each {|node| render_node_filters(node) }
     end
-  
-    def run_filters
-      (@doc/"[@filter]").each do |node|
-        filters = Hpreserve::Filters.parse(node['filter'])
-        filters.each do |filterset|
-          filter = filterset.shift
-          next unless filter_sandbox.respond_to?(filter)
-          args = [node, filterset].flatten
-          filter_sandbox.__send__(filter, *args)
-        end
-        node.remove_attribute('filter')
+    
+    def render_node_content(node)
+      value = variables[node.remove_attribute('content').split('.')]
+      value = value['default'] if value.respond_to?(:has_key?)
+      render_collection(node, value) and return if value.is_a?(Array)
+      node.inner_html = value
+    end
+    
+    def render_node_filters(node)
+      filters = Hpreserve::Filters.parse(node.remove_attribute('filter'))
+      filters.each do |filterset|
+        filter = filterset.shift
+        next unless filter_sandbox.respond_to?(filter)
+        args = [node, filterset].flatten
+        filter_sandbox.__send__(filter, *args)
       end
     end
     
+    def render_collection(node, values=[])
+      variable_name = node.remove_attribute('local') || 'item'
+      node.children.first.following.remove
+      values.each_with_index do |value, index|
+        @variables.storage[variable_name] = value
+        ele = Marshal.load(Marshal.dump(node.children.first))
+        node.insert_after(ele, node.children.last)
+        render_nodes(ele)
+      end
+      node.children.first.swap('')
+    end
   end
 end
