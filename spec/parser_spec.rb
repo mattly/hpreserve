@@ -2,6 +2,31 @@ require File.dirname(__FILE__) + '/spec_helper.rb'
 
 describe Hpreserve::Parser do
   
+  describe "includes" do
+    before do
+      @doc = Hpreserve::Parser.new("<div include='header'> </div>")
+      @doc.variables = {'includes' => {'header' => 'value'}}
+    end
+    
+    it "replaces includes with their content" do
+      @doc.render_includes
+      @doc.doc.at('div').inner_html.should == "value"
+    end
+    
+    it "removes include attribute from the node" do
+      @doc.render_includes
+      @doc.doc.at('div').has_attribute?('include').should be_false
+    end
+    
+    it "uses the include_base attribute" do
+      @doc.include_base = 'filesystem'
+      @doc.variables = {'filesystem' => {'header' => 'value'}}
+      @doc.render_includes
+      @doc.doc.at('div').inner_html.should == 'value'
+    end
+    
+  end
+  
   describe "simple content replacement" do
     
     before do
@@ -15,7 +40,7 @@ describe Hpreserve::Parser do
     end
     
     it "removes content attributes from the nodes" do
-      @doc.doc.to_s.should == 'Hello <span>Jack</span>.'
+      @doc.doc.at('span').has_attribute?('content').should be_false
     end
   end
   
