@@ -10,6 +10,7 @@ require 'rubygems'
 gem 'ruby-debug'
 require 'ruby-debug'
 
-require "#{File.dirname(__FILE__)}/../config/requirements"
+require "hpricot"
+require "#{File.dirname(__FILE__)}/../lib/hpreserve"
 
 Debugger.start

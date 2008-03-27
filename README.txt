@@ -1,20 +1,77 @@
-Hpreserve aims to be a humane, eval-safe templating system built upon the excellent
-Hpricot DOM manipulation library. My primary goal for Hpreserve is to have a system
-that doesn't require an interpreter to preview the design in a browser. Sample data
-for the preview is simply "made up" by the designer and replaced by the template
-system at runtime.
+= Hpreserve
 
-Rather than use a DOM-id based replacement approach a-la Lilu, I have chosen to go
-with attaching other non-standard attributes to elements to direct the filter
-system:
+* mailto:matt@flowerpowered.com
+
+== DESCRIPTION:
+
+Hpreserve is a humane, eval-safe template system built atop the Hpricot DOM
+manipulation library. Its primary goal is to not require an interpreter to preview
+a design in a browser. The designer provides their own sample data which is replaced
+by the template parser at runtime.
+
+Unlike similar DOM-replacement libraries lilu and Amrita, Hpreserve does not rely
+on matching dom-ids to variable names, recognizing that dom_ids often have semantic
+meaning in their own right. Rather, templates are driven by custom attributes on 
+DOM elements that are removed at runtime.
+
+== FEATURES/PROBLEMS:
+
+* Content Replacement: elements with a "content" attribute will have their contents
+  replaced with the equivalent variable. Namespaced variables are available to the
+  template using '.' to separate the namespaces.
+
+* Content Replacement with Collections: if the variable for an element's content
+  attribute returns an Array, the element's first child node will be used as a 
+  template for iterating over the content of the array. While iterating, the current
+  item in the array is made available as a variable specified by the parent element's
+  "local" attribute:
+  <ul content='album.songs' local='song'><li content='song.name'>Song Name</li></ul>
+  TODO: Currently, no attempt is made to prevent this local context variable naame 
+  from clobbering an equivalent variable name elsewhere in the variable namespace.
+
+* Partial Includes: Since this huge productivity booster can be replicated in 
+  Textmate (and presumably other decent html editors), elements with an "include"
+  tag have their content replaced by the variable name in the "include" namespace
+  and the contents are further rendered.
+
+* Filters: given by an element's "filter" attribute and specified using a syntax 
+  similar to the "style" attribute in HTML, filters operate on the node itself, 
+  either modifying the element's contents or altering the element's properties.
+  TODO: Filters can't yet access the contents of a variable
   
- * content: refers to the variable to replace the content of the element with 
- * include: like content but its contents will be further parsed for more content
- * filter: a list of filters to run on the content, for example truncation or
-capitalization.
+* Planned Features include more sophisticated controls for iterating over an array
+  variable, and methods for escaping html entities in variables, including an option
+  to do this automatically.
 
-Planned but Unimplemented Features:
+== SYNOPSIS:
 
- * referring to a variable's content in a filter directive
- * iterating over collections
- * automatic escaping of html entities, and the ability to override that
+template = File.open('example.html')
+variables = {'name' => 'value'}
+Hpreserve::Parser.render(template, variables)
+
+== REQUIREMENTS:
+
+* Hpricot
+
+== LICENSE:
+
+Copyright (c) 2008 Matt Lyon
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
