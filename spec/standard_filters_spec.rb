@@ -18,9 +18,9 @@ describe Hpreserve::StandardFilters do
     before { @f = Hpreserve::Filters.create }
     
     it "removes the node from the document" do
-      @doc = Hpricot("<div>Attention Client: This will be cooler</div><div>blah</div>")
-      @f.remove(@doc.at('div'))
-      @doc.to_plain_text.should == "blah"
+      @doc = Hpricot("<div>blah <div>Attention Client: This will be cooler</div><div>blah</div></div>")
+      @f.remove(@doc.at('div div'))
+      @doc.to_plain_text.should == "blah blah"
     end
   end
   
