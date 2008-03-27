@@ -6,6 +6,11 @@ module Hpreserve
       node
     end
     
+    def date(node, strftime)
+      time = Time.parse(node.inner_html)
+      node.inner_html = time.strftime(strftime)
+      node
+    end
     
     # node modification filters
     

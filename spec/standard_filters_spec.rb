@@ -13,6 +13,16 @@ describe Hpreserve::StandardFilters do
     
   end
   
+  describe "date" do
+    before { @f = Hpreserve::Filters.create }
+    
+    it "handles strftime arguments" do
+      @doc = Hpricot("<span>Wed, 26 Mar 2008 23:45:55 -0700</span>")
+      @f.date(@doc.at('span'), '%e %b %y')
+      @doc.at('span').inner_html.should == '26 Mar 08'
+    end
+  end
+  
   
   describe "remove" do
     before { @f = Hpreserve::Filters.create }
