@@ -28,7 +28,7 @@ module Hpreserve
     end
     
     def set_class(node, klass)
-      node.set_attribute('class', klass.uniq.join(' '))
+      node.set_attribute('class', klass.split(' ').uniq.join(' '))
       node
     end
     

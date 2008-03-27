@@ -53,5 +53,16 @@ describe Hpreserve::StandardFilters do
       @doc.at('span').classes.should == ['foo', 'bar']
     end
   end
+  
+  describe "set_class" do
+    before { @f = Hpreserve::Filters.create }
+    
+    it "replacess the element's classes" do
+      @doc = Hpricot("<span class='foo'>Foo</span>")
+      @f.set_class(@doc.at('span'), 'bar')
+      @doc.at('span').classes.should == ['bar']
+    end
+    
+  end
 
 end
