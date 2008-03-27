@@ -40,11 +40,34 @@ describe Hpreserve::Variables do
       @var[%w(x a)].should == 'value'
     end
     
-    it "descends into datetime variables"
+    it "handles date and time variables" do
+      time = Time.now
+      @var.storage['today'] = time
+      @var['today']['default'].should == time.httpdate
+      @var['today']['year'].should == time.year
+    end
     
-    it "knows the size of arrays"
+    it "knows the size of arrays" do
+      @var.storage['x'] = %w(one two three four)
+      @var['x','size'].should == 4
+    end
     
-    it "handles first and last on arrays"
+    it "handles first and last on arrays" do
+      @var.storage['x'] = %w(one two three four)
+      @var['x','first'].should == 'one'
+      @var['x','last'].should == 'four'
+    end
+    
+    it "handles numbers on arrays" do
+      @var.storage['x'] = %w(one two three four)
+      @var['x','1'].should == 'two'
+    end
+    
+    it "handles procs in arrays" do
+      @var.storage['x'] = [proc {'one'}, proc {'two'}]
+      @var['x','first'].should == 'one'
+      @var['x','1'].should == 'two'
+    end
   end
   
   describe "string output" do
