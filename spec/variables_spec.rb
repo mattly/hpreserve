@@ -43,7 +43,7 @@ describe Hpreserve::Variables do
     it "handles date and time variables" do
       time = Time.now
       @var.storage['today'] = time
-      @var['today']['default'].should == time.httpdate
+      @var['today']['default'].should == time.rfc2822
       @var['today']['year'].should == time.year
     end
     
