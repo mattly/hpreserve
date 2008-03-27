@@ -61,14 +61,6 @@ describe Hpreserve::Parser do
     
   end
   
-  describe "wrapper replacement" do
-    it "replaces wrapper elements with their contents" do
-      @doc = Hpreserve::Parser.new("a <wrapper>b</wrapper> c")
-      @doc.replace_wrappers
-      @doc.doc.to_s.should == "a b c"
-    end
-  end
-  
   describe "filter handler" do
 
     it "runs the given filterset on a node" do

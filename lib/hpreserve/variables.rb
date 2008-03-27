@@ -11,7 +11,8 @@ module Hpreserve
     def [](*path)
       stack = @storage
       path.flatten.each do |piece|
-        if stack.is_a?(Hash) and stack.has_key?(piece)
+        # Hashes
+        if stack.respond_to?(:has_key?) and stack.has_key?(piece)
           stack[piece] = stack[piece].call if stack[piece].is_a?(Proc)
           stack = stack[piece]
         else
@@ -19,6 +20,14 @@ module Hpreserve
         end
       end
       stack
+    end
+    
+    def string_for(*path)
+      value = self[path]
+      if value.respond_to?(:has_key?)
+        value = value['default']
+      end
+      value
     end
   
   end

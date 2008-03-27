@@ -22,7 +22,6 @@ module Hpreserve
       self.variables = variables
       render_content
       run_filters
-      replace_wrappers
       @doc.to_s
     end
     
@@ -35,7 +34,7 @@ module Hpreserve
     
     def render_content
       (@doc/"[@content]").each do |node|
-        node.inner_html = variables[node['content'].split('.')]
+        node.inner_html = variables.string_for node['content'].split('.')
         node.remove_attribute('content')
       end
     end
@@ -51,10 +50,6 @@ module Hpreserve
         end
         node.remove_attribute('filter')
       end
-    end
-  
-    def replace_wrappers
-      (@doc/"wrapper").each {|e| e.swap(e.inner_html) }
     end
   
   end
