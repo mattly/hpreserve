@@ -1,8 +1,8 @@
 require 'hpreserve/version'
 
-AUTHOR = 'FIXME full name'  # can also be an array of Authors
+AUTHOR = 'Matt Lyon'  # can also be an array of Authors
 EMAIL = "matt@flowerpowered.com"
-DESCRIPTION = "description of gem"
+DESCRIPTION = "A Humane HTML templating library built around Hpricot"
 GEM_NAME = 'hpreserve' # what ppl will type to install your gem
 RUBYFORGE_PROJECT = 'hpreserve' # The unix name for your project
 HOMEPATH = "http://#{RUBYFORGE_PROJECT}.rubyforge.org"

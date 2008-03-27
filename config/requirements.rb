@@ -3,7 +3,7 @@ include FileUtils
 
 require 'rubygems'
 # hoe newgem rubigen
-%w[rake  hpricot].each do |req_gem|
+%w[rake hpricot].each do |req_gem|
   begin
     require req_gem
   rescue LoadError
