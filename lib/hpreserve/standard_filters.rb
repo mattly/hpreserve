@@ -6,6 +6,16 @@ module Hpreserve
       node
     end
     
+    
+    
+    def remove(node)
+      node.parent.children.delete(node)
+    end
+    
+    def unwrap(node)
+      node.inner_html
+    end
+    
   end
 end
 
