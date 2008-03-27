@@ -59,6 +59,13 @@ describe Hpreserve::Parser do
       @doc.doc.to_plain_text.should == "Hi Jack Shepherd"
     end
     
+    it "handles variable paths that end up in hashes" do
+      @doc = Hpreserve::Parser.new("Hi <span content='name'>Name</span>")
+      @doc.variables = {'name' => {'default' => 'Jack Shepherd', 'first' => 'Jack', 'last' => 'Shepherd'}}
+      @doc.render_content
+      @doc.doc.to_plain_text.should == "Hi Jack Shepherd"
+    end
+    
   end
   
   describe "filter handler" do
