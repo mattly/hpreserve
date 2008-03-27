@@ -6,16 +6,22 @@ describe Hpreserve::Parser do
     before do
       @doc = Hpreserve::Parser.new("<div include='header'> </div>")
       @doc.variables = {'includes' => {'header' => 'value'}}
+      @doc.render_includes
     end
     
     it "replaces includes with their content" do
-      @doc.render_includes
       @doc.doc.at('div').inner_html.should == "value"
     end
     
     it "removes include attribute from the node" do
-      @doc.render_includes
       @doc.doc.at('div').has_attribute?('include').should be_false
+    end
+    
+    it "handles namespaced includes" do
+      @doc = Hpreserve::Parser.new("<div include='contrived.example'> </div>")
+      @doc.variables = {'includes' => {'contrived' => {'example' => 'value'}}}
+      @doc.render_includes
+      @doc.doc.at('div').inner_html.should == "value"
     end
     
     it "uses the include_base attribute" do
