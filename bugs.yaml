@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/project 
+name: hpreserve
+version: "0.1"
+issues: []
+
+components: 
+- !ditz.rubyforge.org,2008-03-06/component 
+  name: hpreserve
+releases: 
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: Initial Release
+  status: :unreleased
+  release_time: 
+  log_events: 
+  - - 2008-04-03 15:04:29.900355 -07:00
+    - Matt Lyon <matt@flowerpowered.com>
+    - created
+    - Hpreserve 0.1.0 will the first release, with basic functionality down
