@@ -25,12 +25,12 @@ describe Hpreserve::Filters do
     end
     
     it "handles single filters with arguments" do
-      Hpreserve::Filters.parse('truncate: 30 ...').should == [['truncate', '30', '...']]
+      Hpreserve::Filters.parse('truncate: 30, ...').should == [['truncate', '30', '...']]
     end
     
     it "handles complex filter directives" do
       Hpreserve::Filters.parse(
-        'truncate: 30 ...; capitalize; link_to: @item.link; add_class: @item.type'
+        'truncate: 30, ...; capitalize; link_to: @item.link; add_class: @item.type'
       ).should == [
         ['truncate', '30', '...'], ['capitalize'], ['link_to', '@item.link'], 
         ['add_class', '@item.type']

@@ -37,7 +37,7 @@ module Hpreserve
         list = rule.split(':')
         filter = list.shift.strip
         set = [filter]
-        set += list.join(':').split(' ').collect{|a| a.strip } unless list.empty?
+        set += list.join(':').split(',').collect{|a| a.strip } unless list.empty?
         memo << set
       end
     end
