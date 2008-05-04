@@ -4,7 +4,7 @@ AUTHOR = 'Matt Lyon'  # can also be an array of Authors
 EMAIL = "matt@flowerpowered.com"
 DESCRIPTION = "A Humane HTML templating library built around Hpricot"
 GEM_NAME = 'hpreserve' # what ppl will type to install your gem
-RUBYFORGE_PROJECT = 'hpreserve' # The unix name for your project
+RUBYFORGE_PROJECT = nil # The unix name for your project
 HOMEPATH = "http://#{RUBYFORGE_PROJECT}.rubyforge.org"
 DOWNLOAD_PATH = "http://rubyforge.org/projects/#{RUBYFORGE_PROJECT}"
 
