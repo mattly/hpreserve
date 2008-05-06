@@ -11,7 +11,6 @@ module Hpreserve
     def initialize(doc='')
       self.doc = Hpricot(doc)
       self.filter_sandbox = Hpreserve::Filters.create
-      self.include_base = 'includes'
     end
   
     def variables=(vars)
@@ -26,7 +25,7 @@ module Hpreserve
     
     def render_includes
       (@doc/"[@include]").each do |node|
-        node.inner_html = variables[[include_base, node['include'].split('.')].flatten]
+        node.inner_html = variables[[include_base, node['include'].split('.')].flatten.compact]
         node.remove_attribute('include')
       end
     end

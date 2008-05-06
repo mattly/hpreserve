@@ -5,7 +5,7 @@ describe Hpreserve::Parser do
   describe "includes" do
     before do
       @doc = Hpreserve::Parser.new("<div include='header'> </div>")
-      @doc.variables = {'includes' => {'header' => 'value'}}
+      @doc.variables = {'header' => 'value'}
       @doc.render_includes
     end
     
@@ -19,7 +19,7 @@ describe Hpreserve::Parser do
     
     it "handles namespaced includes" do
       @doc = Hpreserve::Parser.new("<div include='contrived.example'> </div>")
-      @doc.variables = {'includes' => {'contrived' => {'example' => 'value'}}}
+      @doc.variables = {'contrived' => {'example' => 'value'}}
       @doc.render_includes
       @doc.doc.at('div').inner_html.should == "value"
     end
