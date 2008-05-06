@@ -5,7 +5,7 @@ module Hpreserve
       doc = new(doc)
       doc.render(variables)
     end
-  
+    
     attr_accessor :doc, :variables, :filter_sandbox, :include_base
   
     def initialize(doc='')
@@ -15,17 +15,21 @@ module Hpreserve
   
     def variables=(vars)
       @variables = Hpreserve::Variables.new(vars)
+      @filter_sandbox.variables = variables
     end
   
-    def render(variables={})
-      self.variables = variables
+    def render(vars={})
+      self.variables = vars
       render_nodes
       @doc.to_s
     end
     
     def render_includes
       (@doc/"[@include]").each do |node|
-        node.inner_html = variables[[include_base, node['include'].split('.')].flatten.compact]
+        var, default = node['include'].split('|').collect {|s| s.strip }
+        incl = variables.substitute(var)
+        incl = [include_base, incl.split('.')].flatten.compact
+        node.inner_html = variables[incl] || variables[default]
         node.remove_attribute('include')
       end
     end
@@ -36,7 +40,7 @@ module Hpreserve
     end
     
     def render_node_content(node)
-      value = variables[node.remove_attribute('content').split('.')]
+      value = variables[node.remove_attribute('content').strip.split('.')]
       value = value['default'] if value.respond_to?(:has_key?)
       render_collection(node, value) and return if value.is_a?(Array)
       node.inner_html = value

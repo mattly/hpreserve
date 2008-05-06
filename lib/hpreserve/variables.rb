@@ -1,7 +1,7 @@
 module Hpreserve
   
   class Variables
-  
+    
     attr_accessor :storage
   
     def initialize(vars={})
@@ -10,8 +10,10 @@ module Hpreserve
     
     # climbs the branches of the variable hash's tree, handling non-hashes along the way.
     def [](*path)
+      path = path.flatten
+      return '' if path.empty?
       stack = @storage
-      path.flatten.each do |piece|
+      path.each do |piece|
         # much of this stolen blatantly from liquid
         if (stack.respond_to?(:has_key?) and stack.has_key?(piece)) ||
            (stack.respond_to?(:fetch) and piece =~ /^\d+$/)
@@ -26,6 +28,13 @@ module Hpreserve
         end
       end
       stack
+    end
+    
+    def substitute(str='')
+      str.gsub(/\{([\w\.]+)[\s\|]*([^\{\}]+)?\}/) do |m|
+        val, default = $1, $2
+        self["#{val}".split('.')] || "#{default}";
+      end
     end
     
   end

@@ -18,7 +18,7 @@ describe Hpreserve::Parser do
     end
     
     it "handles namespaced includes" do
-      @doc = Hpreserve::Parser.new("<div include='contrived.example'> </div>")
+      @doc.doc = Hpricot("<div include='contrived.example'> </div>")
       @doc.variables = {'contrived' => {'example' => 'value'}}
       @doc.render_includes
       @doc.doc.at('div').inner_html.should == "value"
@@ -29,6 +29,37 @@ describe Hpreserve::Parser do
       @doc.variables = {'filesystem' => {'header' => 'value'}}
       @doc.render_includes
       @doc.doc.at('div').inner_html.should == 'value'
+    end
+    
+    it "substitutes variables in the include string" do
+      @doc.doc = Hpricot("<div include='{a}_sidebar'> </div>")
+      @doc.variables = {'a' => 'b', 'b_sidebar' => 'value'}
+      @doc.render_includes
+      @doc.doc.at('div').inner_html.should == 'value'
+    end
+    
+    it "ignores a default include if the given include exists" do
+      @doc.doc = Hpricot("<div include='{a}_sidebar | sidebar'> </div>")
+      @doc.variables = {'a' => 'a', 'a_sidebar' => 'value'}
+      @doc.render_includes
+      @doc.doc.at('div').inner_html.should == 'value'
+    end
+    
+    it "falls back to a default include if the given value returns empty" do
+      @doc.doc = Hpricot("<div include='{a}_sidebar | sidebar'> </div>")
+      @doc.variables = {'a' => 'b', 'sidebar' => 'value'}
+      @doc.render_includes
+      @doc.doc.at('div').inner_html.should == 'value'
+    end
+    
+    it "doesn't care about whitespace (or lack of) in the include directive" do
+      @doc.variables = {'a' => 'a', 'a_sidebar' => 'a_value', 'sidebar' => 'value'}
+      
+      ["{a}_sidebar|sidebar", " {a}_sidebar | sidebar ", "   {a}_sidebar  "].each do |i|
+        @doc.doc = Hpricot("<div include='#{i}'> </div>")
+        @doc.render_includes
+        @doc.doc.at('div').inner_html.should == 'a_value'
+      end
     end
     
   end
@@ -64,6 +95,13 @@ describe Hpreserve::Parser do
       @doc.variables = {'name' => {'default' => 'Jack Shepherd', 'first' => 'Jack', 'last' => 'Shepherd'}}
       @doc.render_node_content(@doc.doc.at('span'))
       @doc.doc.to_plain_text.should == "Hi Jack Shepherd"
+    end
+    
+    it "ignores whitespace in variable names" do
+      @doc = Hpreserve::Parser.new("Hi <span content='  name  '>Name</span>")
+      @doc.variables = {'name' => 'Jack Shepherd'}
+      @doc.render_node_content(@doc.doc.at('span'))
+      @doc.doc.to_plain_text.should == 'Hi Jack Shepherd'
     end
     
   end

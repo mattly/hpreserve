@@ -9,9 +9,52 @@ describe Hpreserve::Variables do
     end
   end
   
+  describe "substitute" do
+    before do
+      @var = Hpreserve::Variables.new({'a' => 'b', 'b' => {'c' => 'val'}})
+    end
+    
+    it "substitutes variables" do
+      @var.substitute('{a}').should == 'b'
+    end
+    
+    it "substitutes variables with other things around them" do
+      @var.substitute('foo{a}ar').should == 'foobar'
+    end
+    
+    it "substitutes multiple variables in the string" do
+      @var.substitute('foo{a}ar_{b.c}').should == 'foobar_val'
+    end
+    
+    it "ignores strings without substitute values" do
+      @var.substitute('foo').should == 'foo'
+    end
+    
+    it "uses defaults if no value found" do
+      @var.substitute('{foo | bar}').should == 'bar'
+    end
+    
+    it "ignores defaults if value found" do
+      @var.substitute('{a | bar}').should == 'b'
+    end
+    
+    it "ignores whitespace around default" do
+      @var.substitute('{foo   |    bar}').should == 'bar'
+      @var.substitute('{foo|bar}').should == 'bar'
+    end
+    
+    it "returns an empty string if no default and no value found" do
+      @var.substitute('{foo}').should == ''
+    end
+  end
+  
   describe "retrieval" do
     before do
       @var = Hpreserve::Variables.new({'a' => {'b' => {'c' => 'value'}}})
+    end
+
+    it "ignores requests for empty arrays" do
+      @var[[]].should == ''
     end
     
     it "pulls the variables out of the nest" do
