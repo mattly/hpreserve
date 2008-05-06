@@ -7,7 +7,7 @@ describe Hpreserve::StandardFilters do
     
     it "capitalizes the text of the node" do
       @doc = Hpricot("<span>foo</span>")
-      @f.capitalize(@doc.at('span'))
+      @f.run 'capitalize', @doc.at('span')
       @doc.at('span').inner_text.should == 'Foo'
     end
     
@@ -18,7 +18,7 @@ describe Hpreserve::StandardFilters do
     
     it "handles strftime arguments" do
       @doc = Hpricot("<span>Wed, 26 Mar 2008 23:45:55 -0700</span>")
-      @f.date(@doc.at('span'), '%e %b %y')
+      @f.run 'date', @doc.at('span'), '%e %b %y'
       @doc.at('span').inner_html.should == '26 Mar 08'
     end
   end
@@ -29,7 +29,7 @@ describe Hpreserve::StandardFilters do
     
     it "removes the node from the document" do
       @doc = Hpricot("<div>blah <div>Attention Client: This will be cooler</div><div>blah</div></div>")
-      @f.remove(@doc.at('div div'))
+      @f.run 'remove', @doc.at('div div')
       @doc.to_plain_text.should == "blah blah"
     end
   end
@@ -39,7 +39,7 @@ describe Hpreserve::StandardFilters do
     
     it "replaces the node with its content" do
       @doc = Hpricot("<div>Value</div>")
-      @f.unwrap(@doc.at('div'))
+      @f.run 'unwrap', @doc.at('div')
       @doc.to_s.should == 'Value'
     end
   end
@@ -49,7 +49,7 @@ describe Hpreserve::StandardFilters do
     
     it "sets the href attribute to the url value" do
       @doc = Hpricot("<a href=''>Foo</a>")
-      @f.link(@doc.at('a'), 'foo.com')
+      @f.run 'link', @doc.at('a'), 'foo.com'
       @doc.at('a')['href'].should == 'foo.com'
     end
   end
@@ -59,7 +59,7 @@ describe Hpreserve::StandardFilters do
     
     it "appends the class to the element's classes" do
       @doc = Hpricot("<span class='foo'>Foo</span>")
-      @f.add_class(@doc.at('span'), 'bar')
+      @f.run 'add_class', @doc.at('span'), 'bar'
       @doc.at('span').classes.should == ['foo', 'bar']
     end
   end
@@ -69,10 +69,26 @@ describe Hpreserve::StandardFilters do
     
     it "replacess the element's classes" do
       @doc = Hpricot("<span class='foo'>Foo</span>")
-      @f.set_class(@doc.at('span'), 'bar')
+      @f.run 'set_class', @doc.at('span'), 'bar'
       @doc.at('span').classes.should == ['bar']
     end
     
+  end
+  
+  describe "set_id" do
+    before { @f = Hpreserve::Filters.create }
+    
+    it "sets the element's id" do
+      @doc = Hpricot("<span>foo</span>")
+      @f.run 'set_id', @doc.at('span'), 'bar'
+      @doc.at('span')['id'].should == 'bar'
+    end
+    
+    it "replaces the element's id" do
+      @doc = Hpricot("<span id='foo'>foo</span>")
+      @f.run 'set_id', @doc.at('span'), 'bar'
+      @doc.at('span')['id'].should == 'bar'
+    end
   end
 
 end

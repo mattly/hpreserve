@@ -37,6 +37,11 @@ module Hpreserve
       node
     end
     
+    def set_id(node, id)
+      node.set_attribute('id', id)
+      node
+    end
+    
   end
 end
 

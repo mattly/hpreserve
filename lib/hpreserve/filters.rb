@@ -10,6 +10,8 @@ module Hpreserve
     
     @@filter_modules = []
     
+    attr_accessor :variables
+    
     def self.register(filterset)
       [filterset].flatten.each do |mod|
         raise StandardError("passed filter is not a module") unless mod.is_a?(Module)
@@ -17,8 +19,9 @@ module Hpreserve
       end
     end
     
-    def self.create
+    def self.create(vars=nil)
       filterset = Filters.new
+      filterset.variables = vars
       @@filter_modules.each { |m| filterset.extend m }
       filterset
     end
@@ -26,23 +29,27 @@ module Hpreserve
     # The filter parser expects a string formatted similar to an html element's "style"
     # attribute:
     # 
-    #   * <tt>filter="format_date: short 24hr; truncate_words: 15 ..."</tt>
+    #   * <tt>filter="date: %d %b; truncate_words: 15, ...; capitalize"</tt>
     #
-    # (to provide an example of two currently non-existant filters you wouldn't use
+    # (to provide an example of two currently filters you wouldn't use
     # together...) (todo: better examples fool!). Filters are separated by semicolons
     # and are executed in order given. If the filter needs arguments, those are given
-    # after a colon, arguments separated by spaces.
+    # after a colon and separated by commas.
     def self.parse(str='')
       str.split(';').inject([]) do |memo, rule|
         list = rule.split(':')
         filter = list.shift.strip
         set = [filter]
-        set += list.join(':').split(',').collect{|a| a.strip } unless list.empty?
+        unless list.empty?
+          list = list.join(':')               # get us back to our original string
+          list = list.split(',')              # becase we care about something else
+          set += list.collect {|a| a.strip }  # get rid of any pesky whitespace
+        end
         memo << set
       end
     end
     
-    @@required_methods = %w(__send__ __id__ inspect methods respond_to? extend)
+    @@required_methods = %w(__send__ __id__ variables variables= debugger run inspect methods respond_to? extend)
     
     # :nodoc
     # keeping inspect around simply to make irb happy.
@@ -53,6 +60,12 @@ module Hpreserve
       return false if method_name =~ /^__/ 
       return false if @@required_methods.include?(method_name)
       super
+    end
+    
+    def run(filter, *args)
+      node = args.shift
+      args.each {|a| variables.nil? ? a : variables.substitute(a) }
+      __send__(filter, node, *args) if respond_to?(filter)
     end
 
     instance_methods.each do |m| 
