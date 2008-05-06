@@ -27,8 +27,8 @@ issues:
   component: hpreserve
   release: Initial Release
   reporter: Matt Lyon <matt@flowerpowered.com>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-04-03 15:22:40.750699 -07:00
   references: []
 
@@ -38,6 +38,18 @@ issues:
     - Matt Lyon <matt@flowerpowered.com>
     - created
     - ""
+  - - 2008-05-04 01:25:29.744646 -07:00
+    - Matt Lyon <matt@flowerpowered.com>
+    - changed status from unstarted to in_progress
+    - gonna need this real soon now
+  - - 2008-05-06 01:45:11.615230 -07:00
+    - Matt Lyon <matt@flowerpowered.com>
+    - closed issue with disposition fixed
+    - |
+      filter="set_id: {a}_thing" substitutes the value of 'a'
+      filter="set_id: {a | b}_thing" substitutes a, or 'b' if a returns empty
+      ,
+
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: More Sphisticated Controls Needed for Iterating Over a Collection
   desc: similar to liquid; need "offset" and "limit", with a "continue" for offset
