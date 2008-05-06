@@ -25,19 +25,31 @@ DOM elements that are removed at runtime.
   template for iterating over the content of the array. While iterating, the current
   item in the array is made available as a variable specified by the parent element's
   "local" attribute:
+  
   <ul content='album.songs' local='song'><li content='song.name'>Song Name</li></ul>
+  
   TODO: Currently, no attempt is made to prevent this local context variable naame 
   from clobbering an equivalent variable name elsewhere in the variable namespace.
 
 * Partial Includes: Since this huge productivity booster can be replicated in 
   Textmate (and presumably other decent html editors), elements with an "include"
-  tag have their content replaced by the variable name in the "include" namespace
-  and the contents are further rendered.
+  tag have their content replaced by the given variable. You may provide a default 'root'
+  in the variable namespace with "include_base=". Variable substitution is performed
+  on the given value, and a default is available:
+  
+  <div include='{section.name}_sidebar | sidebar'></div>
+  
+  This would render f.e. 'blog_sidebar' if 'section.name' resolved to 'blog'. If this
+  value returns empty (that is, there is no 'blog_sidebar') it will render the default
+  'sidebar' instead.
 
 * Filters: given by an element's "filter" attribute and specified using a syntax 
   similar to the "style" attribute in HTML, filters operate on the node itself, 
-  either modifying the element's contents or altering the element's properties.
-  TODO: Filters can't yet access the contents of a variable
+  either modifying the element's contents or altering the element's properties. Filter
+  directives are separated by semi-colons, they may be given arguments after a colon, and
+  multiple arguments are separated by commas:
+  
+  <a filter='capitalize; link_to: {thing.link}; truncate: 30, ...'>text</a> 
   
 * Planned Features include more sophisticated controls for iterating over an array
   variable, and methods for escaping html entities in variables, including an option
