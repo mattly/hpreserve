@@ -77,11 +77,11 @@ describe Hpreserve::StandardFilters do
     
     it "santizes the class name" do
       @f.run 'set_class', @doc.at('span'), '.foo and bar'
-      @doc.at('span').classes.should == ['foo_and_bar']
+      @doc.at('span').classes.should == ['foo-and-bar']
     end
     
     it "handles multiple class names with commas" do
-      @f.run 'set_class', @doc.at('span'), 'foo, bar'
+      @f.run 'set_class', @doc.at('span'), 'foo', 'bar'
       @doc.at('span').classes.should == %w(foo bar)
     end
     
@@ -109,13 +109,13 @@ describe Hpreserve::StandardFilters do
     
     it "sets the attr for src" do
       @doc = Hpricot('<span>foo</span>')
-      @f.run 'attr', @doc.at('span'), 'src, /lolcat.jpg'
+      @f.run 'attr', @doc.at('span'), 'src', '/lolcat.jpg'
       @doc.at('span')['src'].should == '/lolcat.jpg'
     end
     
     it "clobbers the attr for src" do
       @doc = Hpricot('<img src="/loldog.jpg" />')
-      @f.run 'attr', @doc.at('img'), 'src, /lolcat.jpg'
+      @f.run 'attr', @doc.at('img'), 'src', '/lolcat.jpg'
       @doc.at('img')['src'].should == '/lolcat.jpg'
     end
   end

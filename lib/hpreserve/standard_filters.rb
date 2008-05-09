@@ -23,22 +23,28 @@ module Hpreserve
     end
     
     def link(node, url)
-      node['href'] = url
+      attr(node, 'href', url)
       node
     end
     
-    def add_class(node, klass)
-      node.set_attribute('class', node.classes.push(klass).uniq.join(' '))
+    def add_class(node, *klasses)
+      set_class(node, [node.classes, klasses].flatten)
       node
     end
     
-    def set_class(node, klass)
-      node.set_attribute('class', klass.split(' ').uniq.join(' '))
+    def set_class(node, *klasses)
+      klasses = klasses.flatten.map! {|c| c.gsub(/[^\-\w]+/,'-').gsub(/^[^a-zA-Z]/,'') }
+      attr(node, 'class', klasses.uniq.join(' '))
       node
     end
     
     def set_id(node, id)
-      node.set_attribute('id', id)
+      attr(node, 'id', id)
+      node
+    end
+    
+    def attr(node, attrib, value)
+      node.set_attribute(attrib, value)
       node
     end
     
