@@ -21,11 +21,11 @@ module Hpreserve
     def render(vars=nil)
       self.variables = vars unless vars.nil?
       render_nodes
-      @doc.to_s
+      doc.to_s
     end
     
     def render_includes
-      (@doc/"[@include]").each do |node|
+      (doc/"[@include]").each do |node|
         var, default = node['include'].split('|').collect {|s| s.strip }
         incl = variables.substitute(var)
         incl = [include_base, incl.split('.')].flatten.compact
@@ -61,7 +61,7 @@ module Hpreserve
       variable_name = node.remove_attribute('local') || 'item'
       node.children.first.following.remove
       values.each_with_index do |value, index|
-        @variables.storage[variable_name] = value
+        variables.storage[variable_name] = value
         ele = Marshal.load(Marshal.dump(node.children.first))
         node.insert_after(ele, node.children.last)
         render_nodes(ele)
