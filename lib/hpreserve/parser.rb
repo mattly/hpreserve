@@ -18,8 +18,8 @@ module Hpreserve
       @filter_sandbox.variables = variables
     end
   
-    def render(vars={})
-      self.variables = vars
+    def render(vars=nil)
+      self.variables = vars unless vars.nil?
       render_nodes
       @doc.to_s
     end
@@ -34,8 +34,9 @@ module Hpreserve
       end
     end
     
-    def render_nodes(base=@doc)
-      (base/"[@content]").each {|node| render_node_content(node) }
+    def render_nodes(base=doc)
+      (base/'meta[@content]').each {|node| node.set_attribute('content', variables.substitute(node['content']))}
+      (base/'[@content]:not(meta)').each {|node| render_node_content(node) }
       (base/'[@filter]').each {|node| render_node_filters(node) }
     end
     

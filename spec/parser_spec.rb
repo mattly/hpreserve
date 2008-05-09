@@ -104,8 +104,29 @@ describe Hpreserve::Parser do
       @doc.doc.to_plain_text.should == 'Hi Jack Shepherd'
     end
     
+    describe "on meta tags" do
+      before do
+        @doc = Hpreserve::Parser.new("<head><meta name='foo' content='plain content' /><meta name='bar'  content='{bar}' /></head>")
+        @doc.variables = {'bar' => 'value'}
+        @doc.render
+      end
+      
+      it "does not insert the content into the node" do
+        @doc.doc.at('meta[@name=foo]').inner_html.should == ''
+        @doc.doc.at('meta[@name=bar]').inner_html.should == ''
+      end
+      
+      it "ignores lack of variables in content string" do
+        @doc.doc.at('meta[@name=foo]')['content'].should == 'plain content'
+      end
+      
+      it "substitutes variables in content string" do
+        @doc.doc.at('meta[@name=bar]')['content'].should == 'value'
+      end
+    end
+    
   end
-  
+    
   describe "collections" do
 
     it "handles simple collections" do
