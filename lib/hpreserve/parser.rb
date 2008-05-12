@@ -19,6 +19,7 @@ module Hpreserve
   
     def render(vars=nil)
       self.variables = vars unless vars.nil?
+      render_includes
       render_nodes
       doc.to_s
     end
