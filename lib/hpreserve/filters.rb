@@ -10,8 +10,6 @@ module Hpreserve
     
     @@filter_modules = []
     
-    attr_accessor :variables
-    
     def self.register(filterset)
       [filterset].flatten.each do |mod|
         raise StandardError("passed filter is not a module") unless mod.is_a?(Module)
@@ -49,6 +47,8 @@ module Hpreserve
       end
     end
     
+    attr_accessor :variables
+    
     @@required_methods = %w(__send__ __id__ variables variables= debugger run inspect methods respond_to? extend)
     
     # :nodoc
@@ -64,7 +64,7 @@ module Hpreserve
     
     def run(filter, *args)
       node = args.shift
-      args.each {|a| variables.nil? ? a : variables.substitute(a) }
+      args.collect! {|a| variables.nil? ? a : variables.substitute(a) }
       __send__(filter, node, *args) if respond_to?(filter)
     end
 

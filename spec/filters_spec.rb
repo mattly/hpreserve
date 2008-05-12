@@ -23,9 +23,10 @@ describe Hpreserve::Filters do
     it "parses arguments for variables and interprets them" do
       @doc = Hpricot('<span>foo</span>')
       vars = mock('variables')
-      vars.should_receive(:substitute).with('{thing.link}/bar')
+      vars.should_receive(:substitute).with('{thing.link}/bar').and_return('foo/bar')
       @f = Hpreserve::Filters.create( vars )
       @f.run('link', @doc.at('span'), '{thing.link}/bar')
+      @doc.at('span')['href'].should == 'foo/bar'
     end
   end
   
