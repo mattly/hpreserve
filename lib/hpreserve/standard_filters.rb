@@ -49,7 +49,8 @@ module Hpreserve
     end
     
     def attr_on_child(node, child, attrib, value)
-      node.at('#'+child).set_attribute(attrib, value)
+      child = node.at('#'+child)
+      child.set_attribute(attrib, value) if child
       node
     end
     

@@ -128,6 +128,13 @@ describe Hpreserve::StandardFilters do
       @f.run 'attr_on_child', @doc.at('div'), 'foo', 'class', 'active'
       @doc.at('#foo').classes.should == ['active']
     end
+    
+    it "handles a child not found" do
+      html = '<div><span id="bar">bar</span></div>'
+      @doc = Hpricot(html)
+      @f.run 'attr_on_child', @doc.at('div'), 'foo', 'class', 'active'
+      @doc.to_s.should == html
+    end
   end
   
 end
