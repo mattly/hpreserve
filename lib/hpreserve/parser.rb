@@ -10,12 +10,11 @@ module Hpreserve
   
     def initialize(doc='')
       self.doc = Hpricot(doc)
-      self.filter_sandbox = Hpreserve::Filters.create
+      self.filter_sandbox = Hpreserve::Filters.create(self)
     end
   
     def variables=(vars)
       @variables = Hpreserve::Variables.new(vars)
-      @filter_sandbox.variables = variables
     end
   
     def render(vars=nil)
