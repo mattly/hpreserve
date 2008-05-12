@@ -119,5 +119,15 @@ describe Hpreserve::StandardFilters do
       @doc.at('img')['src'].should == '/lolcat.jpg'
     end
   end
-
+  
+  describe "attr_on_child" do
+    before { @f = Hpreserve::Filters.create }
+    
+    it "sets the attr on the named child element" do
+      @doc = Hpricot('<div><span id="foo">foo</span><span id="bar">bar</span></div>')
+      @f.run 'attr_on_child', @doc.at('div'), 'foo', 'class', 'active'
+      @doc.at('#foo').classes.should == ['active']
+    end
+  end
+  
 end

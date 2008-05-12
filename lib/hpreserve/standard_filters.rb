@@ -48,6 +48,11 @@ module Hpreserve
       node
     end
     
+    def attr_on_child(node, child, attrib, value)
+      node.at('#'+child).set_attribute(attrib, value)
+      node
+    end
+    
   end
 end
 
