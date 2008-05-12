@@ -10,7 +10,7 @@ module Hpreserve
   
     def initialize(doc='')
       self.doc = Hpricot(doc)
-      self.filter_sandbox = Hpreserve::Filters.create(self)
+      self.filter_sandbox = Hpreserve::Filters.create
     end
   
     def variables=(vars)
@@ -51,8 +51,8 @@ module Hpreserve
       filters.each do |filterset|
         filter = filterset.shift
         next unless filter_sandbox.respond_to?(filter)
-        args = [node, filterset].flatten
-        filter_sandbox.__send__(filter, *args)
+        args = filterset.collect {|a| variables.substitute(a) }
+        filter_sandbox.run(filter, node, *args)
       end
     end
     

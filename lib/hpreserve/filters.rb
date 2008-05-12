@@ -17,9 +17,8 @@ module Hpreserve
       end
     end
     
-    def self.create(parser=nil)
+    def self.create
       filterset = Filters.new
-      filterset.parser = parser
       @@filter_modules.each { |m| filterset.extend m }
       filterset
     end
@@ -47,9 +46,7 @@ module Hpreserve
       end
     end
     
-    attr_accessor :parser
-    
-    @@required_methods = %w(__send__ __id__ parser parser= debugger run inspect methods respond_to? extend)
+    @@required_methods = %w(__send__ __id__ debugger run inspect methods respond_to? extend)
     
     # :nodoc
     # keeping inspect around simply to make irb happy.
@@ -62,9 +59,8 @@ module Hpreserve
       super
     end
     
-    def run(filter, *args)
-      node = args.shift
-      args.collect! {|a| parser.nil? ? a : parser.variables.substitute(a) }
+    def run(filter, node, *args)
+      
       __send__(filter, node, *args) if respond_to?(filter)
     end
 
