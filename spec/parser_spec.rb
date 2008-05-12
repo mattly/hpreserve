@@ -143,6 +143,17 @@ describe Hpreserve::Parser do
       @doc.doc.to_html.should == "<ul><li><span>one</span>: <span><span>me</span><span>you</span></span></li><li><span>two</span>: <span><span>me</span></span></li></ul>"
     end
     
+    it "handles whitespace" do
+      @doc = Hpreserve::Parser.new("<ul content='items' local='item'>
+
+        <li content='item'>1</li>
+
+      </ul>")
+      @doc.variables = {'items' => ['one']}
+      @doc.render_node_content(@doc.doc.at('ul'))
+      @doc.doc.to_html.should == "<ul><li>one</li></ul>"
+    end
+    
   end
   
   describe "filter handler" do

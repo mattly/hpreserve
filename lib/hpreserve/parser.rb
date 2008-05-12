@@ -59,14 +59,17 @@ module Hpreserve
     
     def render_collection(node, values=[])
       variable_name = node.remove_attribute('local') || 'item'
-      node.children.first.following.remove
+      base = node.children.detect {|n| !n.is_a?(Hpricot::Text) }
+      base.following.remove
+      base.preceding.remove
+      template = Marshal.dump(base)
       values.each_with_index do |value, index|
         variables.storage[variable_name] = value
-        ele = Marshal.load(Marshal.dump(node.children.first))
+        ele = Marshal.load(template)
         node.insert_after(ele, node.children.last)
         render_nodes(ele)
       end
-      node.children.first.swap('')
+      base.swap('')
     end
   end
 end
