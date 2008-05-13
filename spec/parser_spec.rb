@@ -156,6 +156,50 @@ describe Hpreserve::Parser do
     
   end
   
+  describe "caching" do
+    before do
+      @doc = Hpreserve::Parser.new("<span content='some.thing'>non-rendered</span>")
+      @doc.variables = {'some' => {'thing' => 'from variables'}}
+      cacher_matches([{:match => /^some\.thing/, :key => 'something'}])
+    end
+    
+    def cacher_matches(match=[])
+      @doc.cacher = Hpreserve::AbstractCacher.new(match)
+    end
+    
+    def render
+      @doc.render_node_content(@doc.doc.at('span'))
+    end
+    
+    it "ignores the cacher if no match is found" do
+      cacher_matches()
+      render
+      @doc.doc.to_s.should == '<span>from variables</span>'
+    end
+    
+    it "checks the cache if a match is found" do
+      @doc.cacher.should_receive(:retrieve).with('something')
+      render
+    end
+    
+    it "uses the value from the cache if a match is found and the key exists in the cache" do
+      @doc.cacher.store('something', 'from cacher')
+      render
+      @doc.doc.to_s.should == 'from cacher'
+    end
+    
+    it "does not render if a match is found and the key exists in the cache" do
+      @doc.cacher.store('something', 'from cacher')
+      @doc.variables.should_not_receive(:[])
+      render
+    end
+    
+    it "stores the value in the cache if a match is found and no key is pre-existing" do
+      @doc.cacher.should_receive(:store).with('something','<span>from variables</span>')
+      render
+    end
+  end
+  
   describe "filter handler" do
 
     it "runs the given filterset on a node" do

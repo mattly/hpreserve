@@ -6,7 +6,7 @@ module Hpreserve
       doc.render(variables)
     end
     
-    attr_accessor :doc, :variables, :filter_sandbox, :include_base
+    attr_accessor :doc, :variables, :filter_sandbox, :include_base, :cacher
   
     def initialize(doc='')
       self.doc = Hpricot(doc)
@@ -41,10 +41,21 @@ module Hpreserve
     end
     
     def render_node_content(node)
-      value = variables[node.remove_attribute('content').strip.split('.')]
-      value = value['default'] if value.respond_to?(:has_key?)
-      render_collection(node, value) and return if value.is_a?(Array)
-      node.inner_html = value
+      variable = node.remove_attribute('content').strip
+      cache = cacher.nil? ? nil : cacher.match?(variable)
+      if cache and stored = cacher.retrieve(cache)
+        node.swap(stored)
+      else
+        value = variables[variable.split('.')]
+        value = value['default'] if value.respond_to?(:has_key?)
+        if value.is_a?(Array)
+          render_collection(node, value)
+        else
+          node.inner_html = value
+        end
+        render_node_filters(node) if node['filter']
+        cacher.store(cache, node.to_s) if cache
+      end
     end
     
     def render_node_filters(node)
@@ -57,6 +68,8 @@ module Hpreserve
       end
     end
     
+    # todo: Marshal.load seems to be a huge performance bottleneck. Maybe some other way?
+    # for now let's use the render cache
     def render_collection(node, values=[])
       variable_name = node.remove_attribute('local') || 'item'
       base = node.children.detect {|n| !n.is_a?(Hpricot::Text) }

@@ -3,6 +3,8 @@ Manifest.txt
 README.txt
 Rakefile
 lib/hpreserve.rb
+lib/hpreserve/abstract_cacher.rb
+lib/hpreserve/file_cacher.rb
 lib/hpreserve/filters.rb
 lib/hpreserve/extensions.rb
 lib/hpreserve/parser.rb
@@ -15,3 +17,5 @@ spec/spec.opts
 spec/spec_helper.rb
 spec/standard_filters_spec.rb
 spec/variables_spec.rb
+spec/abstract_cacher_spec.rb
+spec/file_cacher_spec.rb
