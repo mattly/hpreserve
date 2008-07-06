@@ -24,7 +24,6 @@ spec = Gem::Specification.new do |s|
  
   # Dependencies
   s.add_dependency "hpricot", [">= 0.6.0"]
-  s.add_dependency "rspec"
   
   # Requirements
   s.required_ruby_version = ">= 1.8.6"
