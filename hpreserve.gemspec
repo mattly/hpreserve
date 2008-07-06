@@ -1,9 +1,10 @@
+require 'rake'
 Gem::Specification.new do |s|
   s.name          = "hpreserve"
   s.version       = "0.2.1"
   s.date          = "2008-07-05"
 
-  s.description   = "A humane, eval-safe HTML templating system expressed in HTML."
+  s.summary       = "A humane, eval-safe HTML templating system expressed in HTML."
 
   s.author        = "Matthew Lyon"
   s.email         = "matt@flowerpowered.com"
@@ -13,7 +14,7 @@ Gem::Specification.new do |s|
   
   s.has_rdoc      = false
   
-  s.files         = ["Manifest.txt", "Rakefile", "README.mkdn", "lib/**/*.rb", "spec/*.rb"]
+  s.files         = FileList["Manifest.txt", "Rakefile", "README.mkdn", "lib/**/*.rb", "spec/*.rb"].to_a
 
   s.require_path  = 'lib'
 
