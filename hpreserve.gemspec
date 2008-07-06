@@ -2,7 +2,6 @@ Gem::Specification.new do |s|
   s.name = %q{hpreserve}
   s.version = "0.2.1"
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matthew Lyon"]
   s.date = %q{2008-07-06}
   s.description = %q{A humane, eval-safe HTML templating system expressed in HTML.}
@@ -12,7 +11,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.required_ruby_version = Gem::Requirement.new(">= 1.8.6")
   s.rubygems_version = %q{1.2.0}
-  s.summary = %q{A humane, eval-safe HTML templating system expressed in HTML.}
+  s.summary = %q{eval-safe HTML templates using HTML}
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
