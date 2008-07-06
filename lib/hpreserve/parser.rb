@@ -68,17 +68,15 @@ module Hpreserve
       end
     end
     
-    # todo: Marshal.load seems to be a huge performance bottleneck. Maybe some other way?
-    # for now let's use the render cache
     def render_collection(node, values=[])
       variable_name = node.remove_attribute('local') || 'item'
       base = node.children.detect {|n| !n.is_a?(Hpricot::Text) }
       base.following.remove
       base.preceding.remove
-      template = Marshal.dump(base)
+      template = base.to_s
       values.each_with_index do |value, index|
         variables.storage[variable_name] = value
-        ele = Marshal.load(template)
+        ele = (Hpricot(template)/'*').first
         node.insert_after(ele, node.children.last)
         render_nodes(ele)
       end
