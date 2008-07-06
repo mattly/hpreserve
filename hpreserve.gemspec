@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.version       = "0.2.1"
   s.date          = "2008-07-05"
 
-  s.description   = "A humane, eval-safe HTML templating system using HTML for markup."
+  s.description   = "A humane, eval-safe HTML templating system expressed in HTML."
 
   s.author        = "Matthew Lyon"
   s.email         = "matt@flowerpowered.com"
