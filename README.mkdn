@@ -1,8 +1,8 @@
-= Hpreserve
+# Hpreserve
 
-* mailto:matt@flowerpowered.com
+by Matthew Lyon <matt@flowerpowered.com>
 
-== DESCRIPTION:
+## DESCRIPTION:
 
 Hpreserve is a humane, eval-safe template system built atop the Hpricot DOM
 manipulation library. Its primary goal is to not require an interpreter to preview
@@ -10,11 +10,11 @@ a design in a browser. The designer provides their own sample data which is repl
 by the template parser at runtime.
 
 Unlike similar DOM-replacement libraries lilu and Amrita, Hpreserve does not rely
-on matching dom-ids to variable names, recognizing that dom_ids often have semantic
+on matching DOM IDs to variable names, recognizing that DOM IDs often have semantic
 meaning in their own right. Rather, templates are driven by custom attributes on 
 DOM elements that are removed at runtime.
 
-== FEATURES/PROBLEMS:
+## FEATURES/PROBLEMS:
 
 * Content Replacement: elements with a "content" attribute will have their contents
   replaced with the equivalent variable. Namespaced variables are available to the
@@ -26,9 +26,9 @@ DOM elements that are removed at runtime.
   item in the array is made available as a variable specified by the parent element's
   "local" attribute:
   
-  <ul content='album.songs' local='song'><li content='song.name'>Song Name</li></ul>
+  `<ul content='album.songs' local='song'><li content='song.name'>Song Name</li></ul>`
   
-  TODO: Currently, no attempt is made to prevent this local context variable naame 
+  **TODO**: Currently, no attempt is made to prevent this local context variable naame 
   from clobbering an equivalent variable name elsewhere in the variable namespace.
 
 * Partial Includes: Since this huge productivity booster can be replicated in 
@@ -37,7 +37,7 @@ DOM elements that are removed at runtime.
   in the variable namespace with "include_base=". Variable substitution is performed
   on the given value, and a default is available:
   
-  <div include='{section.name}_sidebar | sidebar'></div>
+  `<div include='{section.name}_sidebar | sidebar'></div>`
   
   This would render f.e. 'blog_sidebar' if 'section.name' resolved to 'blog'. If this
   value returns empty (that is, there is no 'blog_sidebar') it will render the default
@@ -49,23 +49,24 @@ DOM elements that are removed at runtime.
   directives are separated by semi-colons, they may be given arguments after a colon, and
   multiple arguments are separated by commas:
   
-  <a filter='capitalize; link_to: {thing.link}; truncate: 30, ...'>text</a> 
+  `<a filter='capitalize; link_to: {thing.link}; truncate: 30, ...'>text</a>`
   
 * Planned Features include more sophisticated controls for iterating over an array
   variable, and methods for escaping html entities in variables, including an option
   to do this automatically.
 
-== SYNOPSIS:
+## SYNOPSIS:
 
-template = File.open('example.html')
-variables = {'name' => 'value'}
-Hpreserve::Parser.render(template, variables)
+    template = File.open('example.html')
+    variables = {'name' => 'value'}
+    Hpreserve::Parser.render(template, variables)
 
-== REQUIREMENTS:
+## REQUIREMENTS:
 
 * Hpricot
+* Rspec, if you wish to run the spec suite
 
-== LICENSE:
+## LICENSE:
 
 Copyright (c) 2008 Matt Lyon
 

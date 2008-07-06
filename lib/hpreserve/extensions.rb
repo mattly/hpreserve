@@ -9,7 +9,9 @@ end
 
 class Time
   def to_hpreserve
-    { 'default' => self.rfc2822, 'year' => self.year, 'month' => self.month, 'day' => self.day,
-      'short' => self.strftime('%e %b %y, %H:%M'), 'long' => self.strftime('%A %e %B %Y, %I:%M%p') }
+    { 'default' => self.rfc2822, 
+      'year' => self.year, 'month' => self.month, 'day' => self.day,
+      'short' => self.strftime('%e %b %y, %H:%M'), 
+      'long' => self.strftime('%A %e %B %Y, %I:%M%p') }
   end
 end
