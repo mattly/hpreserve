@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matthew Lyon"]
   s.date = %q{2008-07-06}
-  s.description = %q{A humane, eval-safe HTML templating system expressed in HTML.}
+  s.description = %q{A humane, eval-safe HTML templating system expressed in HTML}
   s.email = %q{matt@flowerpowered.com}
   s.files = ["README.mkdn", "Rakefile", "spec/abstract_cacher_spec.rb", "spec/file_cacher_spec.rb", "spec/filters_spec.rb", "spec/parser_spec.rb", "spec/spec.opts", "spec/spec_helper.rb", "spec/standard_filters_spec.rb", "spec/variables_spec.rb", "lib/hpreserve", "lib/hpreserve/abstract_cacher.rb", "lib/hpreserve/extensions.rb", "lib/hpreserve/file_cacher.rb", "lib/hpreserve/filters.rb", "lib/hpreserve/parser.rb", "lib/hpreserve/standard_filters.rb", "lib/hpreserve/variables.rb", "lib/hpreserve.rb"]
   s.homepage = %q{http://github.com/mattly/hpreserve}
